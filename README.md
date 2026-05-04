@@ -56,24 +56,13 @@ This question matters because possession is one of the most debated statistics i
 - Null simulation: Randomly shuffled era labels 10,000 times
 
 **Bootstrap Confidence Intervals:**
-- Metric 1: Overall win rate (proportion) — CLT applies but bootstrapped for consistency (10,000 resamples)
-- Metric 2: Median possession of winning teams by league — **CLT does not apply** to medians because the sampling distribution of the median depends on the density at the population median, not just the variance. Bootstrapping is the appropriate method here (10,000 resamples, 95% confidence intervals)
 
 ## 5. Results
 
-- The team with more possession won significantly more often than chance (50%) across all top 5 leagues
-- The permutation test confirmed this result is statistically significant (p < 0.05)
-- La Liga showed the strongest possession-win relationship, consistent with its tiki-taka culture
-- The Premier League and Serie A showed weaker relationships, reflecting counter-attacking and defensive traditions respectively
-- Possession patterns shifted between the early and late eras, capturing the tactical evolution of European football
 
 
 ## 6. Uncertainty Estimation
 
-- 10,000 bootstrap resamples were used for all confidence intervals
-- Bootstrap distributions were approximately normal for the win rate metric
-- For league-level median possession, bootstrap distributions showed varying spread, with La Liga and Bundesliga showing tighter intervals (more consistent patterns) than Ligue 1
-- All 95% confidence intervals for win rate excluded 50%, confirming the effect is consistent across resamples
 
 ## 7. Limitations
 
