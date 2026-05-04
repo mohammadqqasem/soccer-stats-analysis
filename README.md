@@ -1,90 +1,77 @@
-# Does Possession Win Matches? A Study of the Top 5 European Leagues (2008–2016)
+# Did COVID Kill Home Advantage? A Study of the Top 5 European Leagues
 
 ## 1. Research Question
 
-Does the team with more possession in a match win more often across the top 5 European leagues — and did possession-based football grow in influence between 2008 and 2016?
+Did home advantage disappear during the COVID season when stadiums were empty, and did it recover once fans returned?
 
-This question matters because possession is one of the most debated statistics in football. The rise of Pep Guardiola's Barcelona (2008–2012) convinced much of the football world that dominating the ball was the path to winning. But as counter-pressing tactics emerged — most notably under Jürgen Klopp at Borussia Dortmund — that assumption was increasingly challenged. This project uses match data to test whether the numbers actually support the possession-wins narrative, and whether the answer differs across Europe's top leagues.
+Home advantage is one of the most debated topics in football — teams consistently win more at home than away. But during the 2019/20 season, matches were played behind closed doors with no fans due to COVID-19. This created a unique natural experiment: what actually happens to home advantage when you remove the crowd?
 
 ## 2. Hypothesis
 
-**Main Hypothesis:**  
-- Null: There is no difference in win rate between the team with more possession and the team with less possession — any observed difference is due to chance.  
-- Alternative: The team with higher possession wins significantly more often than the team with lower possession across the top 5 European leagues.
+**Null Hypothesis:** There is no difference in home win rates across the three seasons — any observed differences are due to chance.
 
-**Trend Hypothesis:**  
-- Null: There is no difference in average possession patterns between the early era (2008–2012) and the late era (2012–2016).  
-- Alternative: Possession patterns shifted significantly across the two eras, reflecting the tactical evolution from tiki-taka to counter-pressing.
+**Alternative Hypothesis:** Home win rates dropped significantly during the COVID season (2019/20) compared to the last normal season (2018/19), and recovered in the first season fans returned (2020/21).
 
 ## 3. Data Description
 
-- **Source:** [European Soccer Database](https://www.kaggle.com/datasets/hugomathien/soccer) — Kaggle (CC0 Public Domain), originally sourced from football-data.org
+- **Source:** Club Football Match Data (2000–2025) — [GitHub](https://github.com/xgabora/Club-Football-Match-Data-2000-2025)
 - **Unit of analysis:** One row = one match
-- **Matches:** ~14,000 matches with valid possession data (out of 25,979 total)
-- **Seasons:** 2008/2009 through 2015/2016 (8 seasons)
-- **Leagues:** Premier League (England), La Liga (Spain), Bundesliga (Germany), Serie A (Italy), Ligue 1 (France)
+- **Leagues:** Premier League (E0), La Liga (SP1), Bundesliga (D1), Serie A (I1), Ligue 1 (F1)
+- **Seasons compared:**
+  - 2018/19 — Last normal season (fans present) — 1,826 matches
+  - 2019/20 — COVID season (no fans) — 1,715 matches
+  - 2020/21 — First season back (fans returned) — 1,836 matches
 
 **Key variables:**
+
 | Variable | Description |
 |----------|-------------|
-| `home_poss` | Home team final possession percentage |
-| `away_poss` | Away team final possession percentage |
-| `home_team_goal` | Goals scored by home team |
-| `away_team_goal` | Goals scored by away team |
-| `result` | Match result: Home Win, Away Win, or Draw |
-| `poss_team_won` | Whether the team with more possession won (True/False) |
-| `league` | League name |
-| `season` | Season (e.g. 2008/2009) |
+| `FTResult` | Full-time result: H = Home Win, D = Draw, A = Away Win |
+| `Division` | League code (E0, SP1, D1, I1, F1) |
+| `MatchDate` | Date of the match |
 
 **Cleaning steps:**
-- Possession values were stored as XML in the database and parsed to extract final match possession figures
-- Matches where both teams had equal possession were excluded
-- Matches with missing or unparseable possession data were dropped
-- Analysis filtered to top 5 leagues only (league IDs: 1729, 4769, 7809, 10257, 21518)
+- Filtered to top 5 European leagues only
+- Converted `MatchDate` to datetime
+- Split data into three seasons using date ranges
+- Dropped rows with missing `FTResult`
 
-**Data file:** The `database.sqlite` file is not committed to this repo due to its size. 
+**Data file:** `Matches.csv` — place in the same folder as the notebook to run the analysis. Download from the source link above.
 
 ## 4. Methods
 
-**Permutation Test (Main Hypothesis):**
-- Test statistic: Win rate of the team with more possession
-- Null simulation: Shuffled the `poss_team_won` column 10,000 times and recomputed win rate each time
-- P-value: Proportion of permuted win rates ≥ observed win rate
+*(To be completed in final submission)*
 
-**Permutation Test (Trend Hypothesis):**
-- Test statistic: Difference in mean possession between early era (2008–2012) and late era (2012–2016)
-- Null simulation: Randomly shuffled era labels 10,000 times
-
-**Bootstrap Confidence Intervals:**
+- **Permutation test:** Compare home win rates between the pre-COVID and COVID seasons by shuffling season labels 10,000 times
+- **Bootstrap confidence intervals:** Estimate uncertainty around the home win rate for each season
+- **Non-CLT metric:** Median goal difference in home wins — bootstrapping will be used since CLT does not apply to medians
 
 ## 5. Results
 
+**Home win rates across the three seasons:**
 
+| Season | Matches | Home Wins | Draws | Away Wins |
+|--------|---------|-----------|-------|-----------|
+| 2018/19 (Pre-COVID) | 1,826 | 817 (44.7%) | 472 (25.8%) | 537 (29.4%) |
+| 2019/20 (COVID) | 1,715 | 758 (44.2%) | 418 (24.4%) | 539 (31.4%) |
+| 2020/21 (Post-COVID) | 1,836 | 731 (39.8%) | 467 (25.4%) | 638 (34.7%) |
+
+**Key finding:** Surprisingly, the COVID season barely affected the home win rate (44.7% → 44.2%). The bigger drop came in the first season fans returned (39.8%), when away wins jumped from 29.4% to 34.7%. This challenges the assumption that empty stadiums hurt home teams the most and suggests something more complex is happening.
 
 ## 6. Uncertainty Estimation
 
+*(To be completed in final submission)*
 
 ## 7. Limitations
 
-- Possession data is only available for approximately 55% of matches in the dataset, which may introduce selection bias if missing data is not random
-- The dataset ends in 2016 and does not capture more recent tactical trends (e.g. high press, low-block defending)
-- Possession is measured as a final match figure, which can be inflated when a winning team sits back and the losing team chases the game — this introduces reverse causality
-- The analysis does not control for team quality, opponent strength, or match context (e.g. score at half time)
-- Ligue 1 has historically had lower data quality and fewer matches with possession data recorded
+- The 2019/20 season was disrupted mid-season by COVID — some early matches had fans present before lockdowns
+- The 2020/21 season had partial fan attendance in some leagues as restrictions varied by country
+- The analysis does not control for team quality, transfers, or other factors that changed between seasons
+- Only three seasons are compared — a longer trend analysis would give more context
 
 ## 8. References
 
-- Mathien, H. (2016). *European Soccer Database*. Kaggle. https://www.kaggle.com/datasets/hugomathien/soccer
-- Data originally sourced from football-data.org API
-- Python libraries used: `pandas`, `numpy`, `matplotlib`, `seaborn`, `sqlite3`, `xml.etree.ElementTree`
+- Gábor, A. (2025). *Club Football Match Data*. Retrieved from https://github.com/xgabora/Club-Football-Match-Data-2000-2025
+- Python libraries used: `pandas`, `numpy`, `matplotlib`
 
----
 
-**Repository Structure:**
-```
-soccer-stats-analysis/
-├── data/               # Place database.sqlite here (not committed)
-├── results/            # Generated figures saved here
-├── analysis.ipynb      # Main analysis notebook
-└── README.md           # This file
-```
